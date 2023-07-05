@@ -1,6 +1,7 @@
 # Friday Night Funkin' Simple Engine
 
 Advenced version of original FNF with lot of cool stuff like:
+- Auto update system
 - Better input
 - Custom keybinds
 - Downscroll
