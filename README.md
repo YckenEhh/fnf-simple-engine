@@ -12,4 +12,5 @@ Advenced version of original FNF with lot of cool stuff like:
 - Better charter
 - Middle scroll
 - Lane alpha
+- Custm transitions without code
 - And a lot of another stuff!
