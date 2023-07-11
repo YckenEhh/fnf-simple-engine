@@ -11,6 +11,12 @@ import polymod.format.ParseRules.TargetSignatureElement;
 
 using StringTools;
 
+typedef AsfPixel =
+{
+	color:String,
+	int:Int
+}
+
 class Note extends FlxSprite
 {
 	public var strumTime:Float = 0;
@@ -32,7 +38,17 @@ class Note extends FlxSprite
 	public static var noteScale:Float = 0.7;
 	public static var pixelnoteScale:Float = 1;
 	public static var noteColors:Array<String>;
-	public static var pixelNoteColorsLine:Array<String> = ['purple', 'blue', 'green', 'red', 'white', 'yellow', 'violet', 'black', 'dark'];
+	var pixelNoteColorsLine:Array<AsfPixel> = [
+		{color: 'purple', int: 9},
+		{color: 'blue', int: 10},
+		{color: 'green', int: 11},
+		{color: 'red', int: 12},
+		{color: 'white', int: 13},
+		{color: 'yellow', int: 14},
+		{color: 'violet', int: 15},
+		{color: 'black', int: 16},
+		{color: 'dark', int: 17}
+	];
 
 	public var shouldBePressed:Bool = true;
 
@@ -42,12 +58,12 @@ class Note extends FlxSprite
 
 		if (daType == null)
 			daType = 'default';
-		trace(daType);
 
-		switch (daType){
+		switch (daType)
+		{
 			case 'default':
-                shouldBePressed = true;
-            case 'blammed':
+				shouldBePressed = true;
+			case 'blammed':
 				shouldBePressed = true;
 		}
 
@@ -74,6 +90,7 @@ class Note extends FlxSprite
 			Considers an approximate swagWidth using math. 
 			(Not counting mania 4 because it hurts the eyes, people are accustomed to the original) 
 		 */
+		pixelnoteScale = (1.428571428571429 * noteScale);
 		var genWidth:Float = (228.57142857 * noteScale);
 		if (PlayState.SONG.mania != 4)
 			genWidth -= PlayState.SONG.mania * 1.6;
@@ -81,7 +98,6 @@ class Note extends FlxSprite
 		/*
 			Considers an approximate pixel note size using math. 
 		 */
-		pixelnoteScale = (1.428571428571429 * noteScale);
 		/* 
 			Note colors
 		 */
@@ -108,8 +124,6 @@ class Note extends FlxSprite
 			default:
 				noteColors = ['purple', 'blue', 'green', 'red', 'white', 'yellow', 'violet', 'black', 'dark'];
 		}
-
-		pixelNoteColorsLine = noteColors;
 
 		if (prevNote == null)
 			prevNote = this;
@@ -139,14 +153,14 @@ class Note extends FlxSprite
 						else
 							loadGraphic(Paths.image('weeb/pixelUI/arrowEnds'), true, 7, 6);
 
-						for (i in 0...PlayState.SONG.mania)
+						for (i in 0...pixelNoteColorsLine.length)
 						{
 							if (!isSustainNote)
-								animation.add(pixelNoteColorsLine[i] + 'Scroll', [i + 9]); // Normal notes
+								animation.add(pixelNoteColorsLine[i].color + 'Scroll', [pixelNoteColorsLine[i].int]); // Normal notes
 							else
 							{
-								animation.add(pixelNoteColorsLine[i] + 'hold', [i]); // Holds
-								animation.add(pixelNoteColorsLine[i] + 'holdend', [i]); // Tails
+								animation.add(pixelNoteColorsLine[i].color + 'hold', [pixelNoteColorsLine[i].int - 9]); // Holds
+								animation.add(pixelNoteColorsLine[i].color + 'holdend', [pixelNoteColorsLine[i].int]); // Tails
 							}
 						}
 						setGraphicSize(Std.int(width * PlayState.daPixelZoom * pixelnoteScale));
@@ -175,7 +189,7 @@ class Note extends FlxSprite
 				switch (daType)
 				{
 					case "default":
-                        frames = Paths.getSparrowAtlas('Arrows');
+						frames = Paths.getSparrowAtlas('Arrows');
 
 						animation.addByPrefix('greenScroll', 'green0');
 						animation.addByPrefix('redScroll', 'red0');
@@ -211,7 +225,7 @@ class Note extends FlxSprite
 						updateHitbox();
 						antialiasing = true;
 					case "blammed":
-                        frames = Paths.getSparrowAtlas('noteTypes/normal/blammedNotes', 'shared');
+						frames = Paths.getSparrowAtlas('noteTypes/normal/blammedNotes', 'shared');
 
 						animation.addByPrefix('greenScroll', 'warningNote');
 						animation.addByPrefix('redScroll', 'warningNote');
@@ -247,7 +261,6 @@ class Note extends FlxSprite
 						updateHitbox();
 						antialiasing = true;
 				}
-				
 		}
 		/*
 			Flips arrows trails if user use downscroll

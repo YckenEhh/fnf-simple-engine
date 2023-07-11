@@ -87,7 +87,6 @@ class FreeplayState extends MusicBeatState
 
 		if (StoryMenuState.weekUnlocked[6] || isDebug)
 			addWeek(['Senpai', 'Roses', 'Thorns'], 6, ['senpai', 'senpai', 'spirit']);
-		addSong('final-destination', 7, 'dad');
 
 		// LOAD MUSIC
 
@@ -115,7 +114,7 @@ class FreeplayState extends MusicBeatState
 		scoreText = new FlxText(FlxG.width * 0.62, 5, 0, "", 32);
 		scoreText.setFormat("assets/fonts/vcr.ttf", 32, FlxColor.WHITE, RIGHT);
 
-		var scoreBG:FlxSprite = new FlxSprite(scoreText.x - 6, 0).makeGraphic(Std.int(FlxG.width * 0.4), 132, 0xFF000000);
+		var scoreBG:FlxSprite = new FlxSprite(scoreText.x - 6, 0).makeGraphic(Std.int(FlxG.width * 0.4), 164, 0xFF000000);
 		scoreBG.alpha = 0.6;
 		add(scoreBG);
 
@@ -146,6 +145,14 @@ class FreeplayState extends MusicBeatState
 		selector.text = ">";
 
 		var swag:Alphabet = new Alphabet(1, 0, "swag");
+
+		var textBG:FlxSprite = new FlxSprite(0, FlxG.height - 26).makeGraphic(FlxG.width, 26, 0xFF000000);
+		textBG.alpha = 0.6;
+		add(textBG);
+		var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, "Press R to open replay selecor menu", 20);
+		text.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER);
+		text.scrollFactor.set();
+		add(text);
 
 		super.create();
 	}
@@ -179,8 +186,6 @@ class FreeplayState extends MusicBeatState
 
 		var noteData:Array<SwagSection>;
 		noteData = curSong.notes;
-
-		var strums = [];
 
 		for (section in noteData)
 		{

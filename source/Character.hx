@@ -1,5 +1,6 @@
 package;
 
+import flixel.util.FlxColor;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.animation.FlxBaseAnimation;
@@ -16,6 +17,8 @@ class Character extends FlxSprite
 	public var curCharacter:String = 'bf';
 
 	public var holdTimer:Float = 0;
+
+	public var barColor:FlxColor = FlxColor.WHITE;
 
 	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
 	{
@@ -60,6 +63,7 @@ class Character extends FlxSprite
 				addOffset('scared', -2, -17);
 
 				playAnim('danceRight');
+				barColor = 0xED790135;
 
 			case 'gf-christmas':
 				tex = Paths.getSparrowAtlas('characters/gfChristmas', 'shared');
@@ -91,6 +95,7 @@ class Character extends FlxSprite
 				addOffset('scared', 0, -17);
 
 				playAnim('danceRight');
+				barColor = 0xED790135;
 
 			case 'gf-car':
 				tex = Paths.getSparrowAtlas('characters/gfCar', 'shared');
@@ -105,6 +110,7 @@ class Character extends FlxSprite
 				addOffset('danceRight', 0);
 
 				playAnim('danceRight');
+				barColor = 0xED790135;
 
 			case 'gf-pixel':
 				tex = Paths.getSparrowAtlas('characters/gfPixel', 'shared');
@@ -121,6 +127,7 @@ class Character extends FlxSprite
 				setGraphicSize(Std.int(width * PlayState.daPixelZoom));
 				updateHitbox();
 				antialiasing = false;
+				barColor = 0xED790135;
 
 			case 'gf-tankmen':
 				frames = Paths.getSparrowAtlas('characters/gfTankmen', 'shared');
@@ -133,6 +140,7 @@ class Character extends FlxSprite
 				addOffset('danceRight', 0, -9);
 
 				playAnim('danceRight');
+				barColor = 0xED790135;
 
 			case 'pico-speaker':
 				tex = Paths.getSparrowAtlas('characters/picoSpeaker', 'shared');
@@ -153,6 +161,8 @@ class Character extends FlxSprite
 				playAnim('shoot1');
 
 				loadMappedAnims();
+
+				barColor = 0xFFb7d855;
 
 			case 'dad':
 				tex = Paths.getSparrowAtlas('characters/DADDY_DEAREST', 'shared');
@@ -180,6 +190,8 @@ class Character extends FlxSprite
 				addOffset("singLEFT-loop", -10, 10);
 				playAnim('idle');
 
+				barColor = 0xFFaf66ce;
+
 			case 'spooky':
 				tex = Paths.getSparrowAtlas('characters/spooky_kids_assets', 'shared');
 				frames = tex;
@@ -199,6 +211,8 @@ class Character extends FlxSprite
 				addOffset("singDOWN", -50, -130);
 				playAnim('danceRight');
 
+				barColor = 0xFFd57e00;
+
 			case 'mom':
 				tex = Paths.getSparrowAtlas('characters/Mom_Assets', 'shared');
 				frames = tex;
@@ -215,6 +229,8 @@ class Character extends FlxSprite
 				addOffset("singLEFT", 250, -23);
 				addOffset("singDOWN", 20, -160);
 				playAnim('idle');
+
+				barColor = 0xFFd8558e;
 
 			case 'mom-car':
 				tex = Paths.getSparrowAtlas('characters/momCar', 'shared');
@@ -245,6 +261,8 @@ class Character extends FlxSprite
 				addOffset("singDOWN-loop", 20, -160);
 				playAnim('idle');
 
+				barColor = 0xFFd8558e;
+
 			case 'monster':
 				tex = Paths.getSparrowAtlas('characters/Monster_Assets', 'shared');
 				frames = tex;
@@ -261,6 +279,8 @@ class Character extends FlxSprite
 				addOffset("singDOWN", -40, -94);
 				playAnim('idle');
 
+				barColor = 0xFFf3ff6e;
+
 			case 'monster-christmas':
 				tex = Paths.getSparrowAtlas('characters/monsterChristmas', 'shared');
 				frames = tex;
@@ -276,6 +296,8 @@ class Character extends FlxSprite
 				addOffset("singLEFT", -30, 20);
 				addOffset("singDOWN", -50, -80);
 				playAnim('idle');
+
+				barColor = 0xFFf3ff6e;
 
 			case 'pico':
 				tex = Paths.getSparrowAtlas('characters/Pico_FNF_assetss', 'shared');
@@ -304,6 +326,8 @@ class Character extends FlxSprite
 				playAnim('idle');
 
 				flipX = true;
+
+				barColor = 0xFFb7d855;
 
 			case 'bf':
 				var tex = Paths.getSparrowAtlas('characters/BOYFRIEND', 'shared');
@@ -343,6 +367,8 @@ class Character extends FlxSprite
 
 				flipX = true;
 
+				barColor = 0xFF31b0d1;
+
 			case 'bf-christmas':
 				var tex = Paths.getSparrowAtlas('characters/bfChristmas', 'shared');
 				frames = tex;
@@ -370,6 +396,8 @@ class Character extends FlxSprite
 				playAnim('idle');
 
 				flipX = true;
+
+				barColor = 0xFF31b0d1;
 
 			case 'bf-car':
 				var tex = Paths.getSparrowAtlas('characters/bfCar', 'shared');
@@ -399,6 +427,8 @@ class Character extends FlxSprite
 				playAnim('idle');
 
 				flipX = true;
+
+				barColor = 0xFF31b0d1;
 
 			case 'bf-pixel':
 				frames = Paths.getSparrowAtlas('characters/bfPixel', 'shared');
@@ -434,6 +464,8 @@ class Character extends FlxSprite
 
 				antialiasing = false;
 
+				barColor = 0xFF31b0d1;
+
 			case 'bf-pixel-dead':
 				frames = Paths.getSparrowAtlas('characters/bfPixelsDEAD', 'shared');
 				animation.addByPrefix('singUP', "BF Dies pixel", 24, false);
@@ -452,6 +484,8 @@ class Character extends FlxSprite
 				flipX = true;
 
 				antialiasing = false;
+
+				barColor = 0xFF31b0d1;
 
 			case 'bf-holding-gf':
 				frames = Paths.getSparrowAtlas('characters/bfAndGF', 'shared');
@@ -483,6 +517,8 @@ class Character extends FlxSprite
 
 				flipX = true;
 
+				barColor = 0xFF31b0d1;
+
 			case 'bf-holding-gf-dead':
 				frames = Paths.getSparrowAtlas('characters/bfHoldingGF-DEAD', 'shared');
 				animation.addByPrefix('singUP', "BF Dies with GF", 24, false);
@@ -497,6 +533,8 @@ class Character extends FlxSprite
 				playAnim('firstDeath');
 
 				flipX = true;
+
+				barColor = 0xFF31b0d1;
 
 			case 'senpai':
 				frames = Paths.getSparrowAtlas('characters/senpai', 'shared');
@@ -519,6 +557,8 @@ class Character extends FlxSprite
 
 				antialiasing = false;
 
+				barColor = 0xFFffaa6f;
+
 			case 'senpai-angry':
 				frames = Paths.getSparrowAtlas('characters/senpai', 'shared');
 				animation.addByPrefix('idle', 'Angry Senpai Idle', 24, false);
@@ -539,6 +579,8 @@ class Character extends FlxSprite
 
 				antialiasing = false;
 
+				barColor = 0xFFffaa6f;
+
 			case 'spirit':
 				frames = Paths.getPackerAtlas('characters/spirit', 'shared');
 				animation.addByPrefix('idle', "idle spirit_", 24, false);
@@ -558,6 +600,8 @@ class Character extends FlxSprite
 				playAnim('idle');
 
 				antialiasing = false;
+
+				barColor = 0xFFff3c6e;
 
 			case 'parents-christmas':
 				frames = Paths.getSparrowAtlas('characters/mom_dad_christmas_assets', 'shared');
@@ -584,6 +628,8 @@ class Character extends FlxSprite
 				addOffset("singDOWN-alt", -30, -27);
 				playAnim('idle');
 
+				barColor = 0x86f800df;
+
 			case 'tankman':
 				tex = Paths.getSparrowAtlas('characters/tankmanCaptain', 'shared');
 				frames = tex;
@@ -609,6 +655,8 @@ class Character extends FlxSprite
 				playAnim('idle');
 
 				flipX = true;
+
+				barColor = 0xff000000;
 		}
 
 		dance();

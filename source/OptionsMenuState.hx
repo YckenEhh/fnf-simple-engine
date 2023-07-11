@@ -27,6 +27,7 @@ class OptionsMenuState extends MusicBeatState
 			new MiddlescrollOption('lazy'),
 			new GhostTappingOption('lazy'),
 			new ScrollSpeedOption('lazy'),
+			new SongTimer('lazy'),
 			new LaneUnderlayOption('lazy'),
 			new JudgmentsOption('lazy')
 		]),
@@ -365,6 +366,27 @@ class GhostTappingOption extends Option
 	private override function updateDisplay():String
 	{
 		return 'Ghsot tapping ' + (FlxG.save.data.ghosttaps ? "on" : "off");
+	}
+}
+
+class SongTimer extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.songTimer = !FlxG.save.data.songTimer;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return 'Song length timer ' + (FlxG.save.data.songTimer ? "on" : "off");
 	}
 }
 

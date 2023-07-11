@@ -1,5 +1,7 @@
 package;
 
+import flixel.util.FlxColor;
+import flixel.text.FlxText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -40,8 +42,6 @@ class ReplayMenuSubState extends MusicBeatSubstate
 		}
 
 		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
-		bg.setGraphicSize(Std.int(bg.width * 1.1));
-		bg.updateHitbox();
 		bg.screenCenter();
 		bg.visible = true;
 		bg.antialiasing = true;
@@ -71,6 +71,14 @@ class ReplayMenuSubState extends MusicBeatSubstate
 		}
 
         changeSelection(0);
+
+		var textBG:FlxSprite = new FlxSprite(0, FlxG.height - 26).makeGraphic(FlxG.width, 26, 0xFF000000);
+		textBG.alpha = 0.6;
+		add(textBG);
+		var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, "WARNING! Replay system in beta! Replay can be not 100% right!", 20);
+		text.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER);
+		text.scrollFactor.set();
+		add(text);
 
 		super.create();
 	}

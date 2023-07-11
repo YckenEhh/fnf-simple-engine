@@ -8,7 +8,7 @@ import editors.CharacterEditor;
 
 class DebugState extends MusicBeatSubstate
 {
-	var listArray:Array<String> = ['Main menu layout', 'Character editor'];
+	var listArray:Array<String> = ['Character editor'];
 	var grpTxt:FlxTypedGroup<Alphabet>;
 	var curSelected:Int = 0;
 

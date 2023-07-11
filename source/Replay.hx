@@ -42,7 +42,7 @@ class Replay
 			"songName": PlayState.SONG.song.toLowerCase(),
 			"difficulty": PlayState.storyDifficulty,
 			"replayData": PlayState.currentReplayPresses,
-			"date": Date.now().getMonth() + "." + Date.now().getUTCDate() + " " + Date.now().getHours() + "h" + Date.now().getMinutes() + "min",
+			"date": Date.now().getMonth() + 1 + "." + Date.now().getUTCDate() + " " + Date.now().getHours() + "h" + Date.now().getMinutes() + "min",
 			"downscroll": FlxG.save.data.downscroll,
 			"ghosttaps": FlxG.save.data.ghosttaps,
 			"scrollSpeed": FlxG.save.data.scrollSpeed,
@@ -75,6 +75,7 @@ class Replay
 		PlayState.downscroll = replayFile.downscroll;
 		PlayState.ghostTaps = replayFile.ghosttaps;
 		PlayState.controlsFromSave = replayFile.keyBinds;
+		PlayState.scrollSpeed = FlxG.save.data.scrollSpeed;
 		#end
 	}
 }

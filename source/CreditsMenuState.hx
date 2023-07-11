@@ -22,9 +22,7 @@ class CreditsMenuState extends MusicBeatState
 	private var bgColors = [0xFFFF3F39, 0xFF633253, 0xFFFFD900, 0xFF65FF29, 0xFF419FF7];
 
 	public static var credit:Array<SaveData> = [
-		// Flag engine team here:
 		new SaveData("OldFlag", "Programmer of FNF Simple Engine"),
-		// FNF team here:
 		new SaveData("ninjamuffin99", "Programmer of Friday Night Funkin'"),
 		new SaveData("PhantomArcade", "Animator of Friday Night Funkin'"),
 		new SaveData("evilsk8r", "Artist of Friday Night Funkin'"),

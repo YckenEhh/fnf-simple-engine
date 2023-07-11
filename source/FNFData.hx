@@ -8,7 +8,7 @@ import flixel.system.FlxSound;
 
 class FNFData
 {
-	public static var version:String = '0.1alpha';
+	public static var version:String = '0.2alpha';
 	// KEYBINDS
 	public static var kb1:Array<String> = ['SPACE'];
 	public static var kb2:Array<String> = ['A', 'D'];
@@ -89,5 +89,9 @@ class FNFData
 			FlxG.save.data.fpslimit = 60;
 		if (FlxG.save.data.fpslimit > 720)
 			FlxG.save.data.fpslimit = 720;
+		if (FlxG.save.data.songTimer == null)
+			FlxG.save.data.songTimer = true;
+		if (FlxG.save.data.laneUnderlay == null)
+			FlxG.save.data.laneUnderlay = 0;
 	}
 }
