@@ -13,7 +13,7 @@ class Ratings
 		{name: 'S', accuracy: 95},
 		{name: 'A', accuracy: 90},
 		{name: 'B', accuracy: 80},
-        {name: 'C', accuracy: 70},
+        	{name: 'C', accuracy: 70},
 		{name: 'D', accuracy: 0}
 	];
 
