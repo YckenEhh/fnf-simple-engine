@@ -21,12 +21,12 @@ class CreditsMenuState extends MusicBeatState
 
 	private var bgColors = [0xFFFF3F39, 0xFF633253, 0xFFFFD900, 0xFF65FF29, 0xFF419FF7];
 
-	public static var credit:Array<SaveData> = [
-		new SaveData("OldFlag", "Programmer of FNF Simple Engine"),
-		new SaveData("ninjamuffin99", "Programmer of Friday Night Funkin'"),
-		new SaveData("PhantomArcade", "Animator of Friday Night Funkin'"),
-		new SaveData("evilsk8r", "Artist of Friday Night Funkin'"),
-		new SaveData("kawaisprite", "Composer of Friday Night Funkin'")
+	public static var credit:Array<CreditMember> = [
+		new CreditMember("Ycken", "Programmer of FNF Simple Engine"),
+		new CreditMember("ninjamuffin99", "Programmer of Friday Night Funkin'"),
+		new CreditMember("PhantomArcade", "Animator of Friday Night Funkin'"),
+		new CreditMember("evilsk8r", "Artist of Friday Night Funkin'"),
+		new CreditMember("kawaisprite", "Composer of Friday Night Funkin'")
 	];
 
 	override function create()
@@ -113,7 +113,7 @@ class CreditsMenuState extends MusicBeatState
 	}
 }
 
-class SaveData
+class CreditMember
 {
 	public var nm:String;
 	public var desc:String;

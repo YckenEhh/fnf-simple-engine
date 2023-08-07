@@ -31,6 +31,7 @@ import openfl.events.IOErrorEvent;
 import openfl.media.Sound;
 import openfl.net.FileReference;
 import openfl.utils.ByteArray;
+import flash.media.Sound;
 
 using StringTools;
 
@@ -161,6 +162,7 @@ class ChartingState extends MusicBeatState
 				needsVoices: true,
 				player1: 'bf',
 				player2: 'dad',
+				stage: 'stage',
 				speed: 1,
 				mania: 4,
 				validScore: false
@@ -414,7 +416,8 @@ class ChartingState extends MusicBeatState
 		var tab_group_assets = new FlxUI(null, UI_box);
 		tab_group_assets.name = "Assets";
 
-		var characters:Array<String> = CoolUtil.coolTextFile(Paths.txt('characterList'));
+		var characters:Array<String> = FNFData.charsArray;
+		var stages:Array<String> = FNFData.stagesArray;
 
 		var player1DropDown = new FlxUIDropDownMenu(10, 30, FlxUIDropDownMenu.makeStrIdLabelArray(characters, true), function(character:String)
 		{
@@ -428,14 +431,23 @@ class ChartingState extends MusicBeatState
 		});
 		player2DropDown.selectedLabel = _song.player2;
 
+		var stageDropDown = new FlxUIDropDownMenu(10, 80, FlxUIDropDownMenu.makeStrIdLabelArray(stages, true), function(stage:String)
+		{
+			_song.stage = stages[Std.parseInt(stage)];
+		});
+		stageDropDown.selectedLabel = _song.stage;
+
 		var player1Label = new FlxText(10, 10, 64, 'Player');
 		var player2Label = new FlxText(140, 10, 64, 'Opponent');
+		var stageLabel = new FlxText(10, 60, 64, 'Stage');
 
 		tab_group_assets.add(player1DropDown);
 		tab_group_assets.add(player2DropDown);
+		tab_group_assets.add(stageDropDown);
 
 		tab_group_assets.add(player1Label);
 		tab_group_assets.add(player2Label);
+		tab_group_assets.add(stageLabel);
 
 		UI_box.addGroup(tab_group_assets);
 	}
@@ -511,10 +523,10 @@ class ChartingState extends MusicBeatState
 			// vocals.stop();
 		}
 
-		FlxG.sound.playMusic(Paths.inst(daSong), 0.6);
+		FlxG.sound.playMusic(Sound.fromFile(Paths.inst(daSong)), 0.6);
 
 		// WONT WORK FOR TUTORIAL OR TEST SONG!!! REDO LATER
-		vocals = new FlxSound().loadEmbedded(Paths.voices(daSong));
+		vocals = new FlxSound().loadEmbedded(Sound.fromFile(Paths.voices(daSong)));
 		FlxG.sound.list.add(vocals);
 
 		FlxG.sound.music.pause();
@@ -1268,7 +1280,10 @@ class ChartingState extends MusicBeatState
 				var sustainVis:FlxSprite = new FlxSprite(note.x - 3 + (GRID_SIZE / 2),
 					note.y - 4 + GRID_SIZE).makeGraphic(8, Math.floor(FlxMath.remapToRange(daSus, 0, Conductor.stepCrochet * 16, 0, gridBG.height)));
 
-				sustainVis.color = currentColors[note.noteData];
+				if (note.noteType == 'default' || note.noteType == null)
+					sustainVis.color = currentColors[note.noteData];
+				else
+					sustainVis.color = NoteType.getTypeColor(note.noteType);
 
 				curRenderedSustains.add(sustainVis);
 			}

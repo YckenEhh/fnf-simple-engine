@@ -1,5 +1,6 @@
 package editors;
 
+import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -21,20 +22,60 @@ class CharacterEditor extends FlxState
 	var curAnim:Int = 0;
 	var camFollow:FlxObject;
 
+	private var camHUD:FlxCamera;
+	private var camGame:FlxCamera;
+
 	override function create()
 	{
+		FlxG.mouse.visible = true;
+		FlxG.mouse.useSystemCursor = true;
+
+		camGame = new FlxCamera();
+		camHUD = new FlxCamera();
+		camHUD.bgColor.alpha = 0;
+
+		FlxG.cameras.reset(camGame);
+		FlxG.cameras.add(camHUD);
+
+		FlxCamera.defaultCameras = [camGame];
+
 		FlxG.sound.music.stop();
 
-		char = new Character(0, 0, 'dad');
+		var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('stageback', 'shared'));
+		bg.antialiasing = true;
+		bg.scrollFactor.set(0.9, 0.9);
+		bg.active = false;
+		add(bg);
+
+		var stageFront:FlxSprite = new FlxSprite(-650, 600).loadGraphic(Paths.image('stagefront', 'shared'));
+		stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
+		stageFront.updateHitbox();
+		stageFront.antialiasing = true;
+		stageFront.scrollFactor.set(0.9, 0.9);
+		stageFront.active = false;
+		add(stageFront);
+
+		var stageCurtains:FlxSprite = new FlxSprite(-500, -300).loadGraphic(Paths.image('stagecurtains', 'shared'));
+		stageCurtains.setGraphicSize(Std.int(stageCurtains.width * 0.9));
+		stageCurtains.updateHitbox();
+		stageCurtains.antialiasing = true;
+		stageCurtains.scrollFactor.set(1.3, 1.3);
+		stageCurtains.active = false;
+
+		add(stageCurtains);
+
+		char = new Character(0, 0, 'dad', 'dad');
 		char.screenCenter();
 		add(char);
 
 		dumbTexts = new FlxTypedGroup<FlxText>();
+		dumbTexts.cameras = [camHUD];
 		add(dumbTexts);
 
 		textAnim = new FlxText(300, 16);
 		textAnim.size = 26;
 		textAnim.scrollFactor.set();
+		textAnim.cameras = [camHUD];
 		add(textAnim);
 
 		genBoyOffsets();
@@ -43,7 +84,8 @@ class CharacterEditor extends FlxState
 		camFollow.screenCenter();
 		add(camFollow);
 
-		FlxG.camera.follow(camFollow);
+		camGame.follow(camFollow);
+		camGame.zoom = 0.9;
 
 		super.create();
 	}
@@ -56,7 +98,8 @@ class CharacterEditor extends FlxState
 		{
 			var text:FlxText = new FlxText(10, 20 + (18 * daLoop), 0, anim + ": " + offsets, 15);
 			text.scrollFactor.set();
-			text.color = FlxColor.BLUE;
+			text.color = FlxColor.WHITE;
+			text.cameras = [camHUD];
 			dumbTexts.add(text);
 
 			if (pushList)
@@ -80,9 +123,9 @@ class CharacterEditor extends FlxState
 		textAnim.text = char.animation.curAnim.name;
 
 		if (FlxG.keys.justPressed.E)
-			FlxG.camera.zoom += 0.25;
+			camGame.zoom += 0.25;
 		if (FlxG.keys.justPressed.Q)
-			FlxG.camera.zoom -= 0.25;
+			camGame.zoom -= 0.25;
 
 		if (FlxG.keys.pressed.I || FlxG.keys.pressed.J || FlxG.keys.pressed.K || FlxG.keys.pressed.L)
 		{

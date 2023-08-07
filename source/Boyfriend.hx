@@ -11,11 +11,11 @@ class Boyfriend extends Character
 {
 	public var stunned:Bool = false;
 
-	public function new(x:Float, y:Float, ?char:String = 'bf')
+	public function new(x:Float, y:Float, ?char:String = 'bf', curRole:String)
 	{
-		super(x, y, char, true);
+		super(x, y, char, true, curRole);
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		if (!debugMode)

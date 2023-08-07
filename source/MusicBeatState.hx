@@ -16,9 +16,6 @@ import sys.io.File;
 import haxe.Json;
 #end
 
-import GameJolt;
-import GameJolt.GameJoltAPI;
-
 class MusicBeatState extends FlxUIState
 {
 	private var lastBeat:Float = 0;
@@ -29,6 +26,9 @@ class MusicBeatState extends FlxUIState
 
 	override function create()
 	{
+		FNFData.loadCharsNames();
+		FNFData.loadStageNames();
+		
 		if (transIn != null)
 			trace('reg ' + transIn.region);
 

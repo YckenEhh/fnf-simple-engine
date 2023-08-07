@@ -1,14 +1,18 @@
 package;
 
 import flixel.FlxG;
+import flixel.system.FlxSound;
 #if sys
 import sys.io.File;
-import flixel.system.FlxSound;
+import sys.FileSystem;
 #end
+
+using StringTools;
 
 class FNFData
 {
-	public static var version:String = '0.2alpha';
+	
+	public static var version:String = '0.3alpha';
 	// KEYBINDS
 	public static var kb1:Array<String> = ['SPACE'];
 	public static var kb2:Array<String> = ['A', 'D'];
@@ -19,6 +23,11 @@ class FNFData
 	public static var kb7:Array<String> = ['S', 'D', 'F', 'SPACE', 'J', 'K', 'L'];
 	public static var kb8:Array<String> = ['A', 'S', 'D', 'F', 'H', 'J', 'K', 'L'];
 	public static var kb9:Array<String> = ['A', 'S', 'D', 'F', 'SPACE', 'H', 'J', 'K', 'L'];
+	// Custom stuff
+	public static var charsArray:Array<String> = [];
+	public static var charsModsArray:Array<String> = [];
+	public static var stagesArray:Array<String> = [];
+	public static var stagesModsArray:Array<String> = [];
 
 	public static function loadSave()
 	{
@@ -32,6 +41,40 @@ class FNFData
 		kb7 = FlxG.save.data.kb7;
 		kb8 = FlxG.save.data.kb8;
 		kb9 = FlxG.save.data.kb9;
+	}
+
+	public static function loadCharsNames()
+	{
+		charsModsArray = [];
+		charsArray = [];
+		charsArray = CoolUtil.coolTextFile(Paths.txt('characterList'));
+		#if sys
+		for (chars in FileSystem.readDirectory(FileSystem.absolutePath("mods/characters/")))
+		{
+			if (!chars.endsWith('.txt'))
+			{
+				charsArray.push(chars);
+				charsModsArray.push(chars);
+			}
+		}
+		#end
+	}
+
+	public static function loadStageNames()
+	{
+		stagesModsArray = [];
+		stagesArray = [];
+		stagesArray = CoolUtil.coolTextFile(Paths.txt('stageList'));
+		#if sys
+		for (stages in FileSystem.readDirectory(FileSystem.absolutePath("mods/stages/")))
+		{
+			if (!stages.endsWith('.txt'))
+			{
+				stagesArray.push(stages);
+				stagesModsArray.push(stages);
+			}
+		}
+		#end
 	}
 
 	public static function getVersionGithub()

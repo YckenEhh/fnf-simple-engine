@@ -17,34 +17,43 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	var isReplaySaved:Bool = false;
 	var replayText:FlxText;
+	var randomGameover:Int = 1;
+
+	var playingDeathSound:Bool = false;
 
 	public function new(x:Float, y:Float)
 	{
+		randomGameover = FlxG.random.int(1, 25);
+
 		var daStage = PlayState.curStage;
 		var daBf:String = '';
 		switch (daStage)
 		{
-			case 'school':
-				stageSuffix = '-pixel';
-				daBf = 'bf-pixel-dead';
-			case 'schoolEvil':
+			case 'school' | 'schoolEvil':
 				stageSuffix = '-pixel';
 				daBf = 'bf-pixel-dead';
 			default:
 				daBf = 'bf';
 		}
 
+		var daSong = PlayState.SONG.song.toLowerCase();
+
+		switch (daSong)
+		{
+			case 'stress':
+				daBf = 'bf-holding-gf-dead';
+		}
+
 		super();
 
 		Conductor.songPosition = 0;
 
-		bf = new Boyfriend(x, y, daBf);
+		bf = new Boyfriend(x, y, daBf, 'bf');
 		add(bf);
 
 		camFollow = new FlxObject(bf.getGraphicMidpoint().x, bf.getGraphicMidpoint().y, 1, 1);
 		add(camFollow);
 
-		FlxG.sound.play(Paths.sound('fnf_loss_sfx' + stageSuffix));
 		Conductor.changeBPM(100);
 
 		// FlxG.camera.followLerp = 1;
@@ -57,7 +66,8 @@ class GameOverSubstate extends MusicBeatSubstate
 		replayText = new FlxText(5, FlxG.height - 20, 0, "Press F1 to save replay", 20);
 		replayText.scrollFactor.set();
 		replayText.setFormat("VCR OSD Mono", 20, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		add(replayText);
+		if (!FreeplayState.isRandomNotes)
+			add(replayText);
 	}
 
 	override function update(elapsed:Float)
@@ -70,7 +80,8 @@ class GameOverSubstate extends MusicBeatSubstate
 		}
 
 		if (FlxG.keys.justPressed.F1 && !isReplaySaved){
-			Replay.saveReplay(false);
+			if (!FreeplayState.isRandomNotes)
+				Replay.saveReplay(false);
 			replayText.visible = false;
 			isReplaySaved = true;
 		}
@@ -90,15 +101,38 @@ class GameOverSubstate extends MusicBeatSubstate
 			FlxG.camera.follow(camFollow, LOCKON, 0.01);
 		}
 
-		if (bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.finished)
+		switch (PlayState.storyWeek)
 		{
-			FlxG.sound.playMusic(Paths.music('gameOver' + stageSuffix));
+			case 7:
+				if (bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.finished && !playingDeathSound)
+				{
+					playingDeathSound = true;
+
+					coolStartDeath(0.2);
+
+					FlxG.sound.play(Paths.sound('jeffGameover/jeffGameover-' + randomGameover), 1, false, null, true, function()
+					{
+						if (!isEnding)
+							FlxG.sound.music.fadeIn(4, 0.2, 1);
+					});
+				}
+			default:
+				if (bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.finished)
+				{
+					coolStartDeath();
+				}
 		}
 
 		if (FlxG.sound.music.playing)
 		{
 			Conductor.songPosition = Std.int(FlxG.sound.music.time);
 		}
+	}
+
+	private function coolStartDeath(?vol:Float = 1):Void
+	{
+		if (!isEnding)
+			FlxG.sound.playMusic(Paths.music('gameOver' + stageSuffix), vol);
 	}
 
 	override function beatHit()

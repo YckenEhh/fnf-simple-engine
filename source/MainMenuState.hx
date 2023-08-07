@@ -1,7 +1,5 @@
 package;
 
-import GameJolt.GameJoltAPI;
-
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -23,7 +21,7 @@ using StringTools;
 
 class MainMenuState extends MusicBeatState
 {
-	var curSelected:Int = 0;
+	static var curSelected:Int = 0;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
 
@@ -44,10 +42,6 @@ class MainMenuState extends MusicBeatState
 
 	override function create()
 	{
-		GameJoltAPI.connect();
-		GameJoltAPI.authDaUser(FlxG.save.data.gjUser, FlxG.save.data.gjToken);
-		GameJoltAPI.startSession();
-		
 		#if desktop
 		DiscordClient.changePresence("Browsing menu", null);
 		#end
@@ -128,6 +122,11 @@ class MainMenuState extends MusicBeatState
 				changeItem(1);
 			}
 
+			if (FlxG.keys.justPressed.SEVEN)
+			{
+				FlxG.switchState(new DebugState());
+			}
+
 			if (FlxG.keys.justPressed.ESCAPE)
 			{
 				FlxG.switchState(new TitleState());
@@ -173,7 +172,7 @@ class MainMenuState extends MusicBeatState
 									case 'story mode':
 										FlxG.switchState(new StoryMenuState());
 									case 'freeplay':
-										FlxG.switchState(new FreeplayState());
+										FlxG.switchState(new PlayModeSelctState());
 									case 'options':
 										FlxG.switchState(new OptionsMenuState());
 									case 'credits':

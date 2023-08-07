@@ -1,20 +1,20 @@
 package;
 
+import editors.FreeplayEditorState;
+import editors.StageEditorState.StageSelectSubstate;
 import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.FlxSprite;
 
-import editors.CharacterEditor;
-
-class DebugState extends MusicBeatSubstate
+class DebugState extends MusicBeatState
 {
-	var listArray:Array<String> = ['Character editor'];
+	var listArray:Array<String> = ['Freeplay editor', 'Stage editor'];
 	var grpTxt:FlxTypedGroup<Alphabet>;
 	var curSelected:Int = 0;
 
-	public function new()
+	override function create()
 	{
-		super();
+		super.create();
 
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.scrollFactor.set();
@@ -91,19 +91,19 @@ class DebugState extends MusicBeatSubstate
 			}
 		}
 
+		if (FlxG.keys.justPressed.ESCAPE)
+			FlxG.switchState(new MainMenuState());
+		
 		if (accepted)
 		{
 			var daSelected:String = listArray[curSelected];
 
 			switch (daSelected)
 			{
-				case 'Character editor':
-					FlxG.switchState(new CharacterEditor());
-			}
-
-			if (FlxG.keys.justPressed.ESCAPE)
-			{
-				close();
+				case 'Freeplay editor':
+					FlxG.switchState(new FreeplayEditorState());
+				case 'Stage editor':
+					openSubState(new StageSelectSubstate());
 			}
 		}
 	}

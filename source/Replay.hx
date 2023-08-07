@@ -54,23 +54,24 @@ class Replay
 
 		#if sys
 		File.saveContent("replays/" + PlayState.SONG.song.toLowerCase() + "-replay" + Date.now().getTime() + ".fnfReplay", data);
-        // Date.now().getTime() is smth like replay ig
+		// Date.now().getTime() is smth like replay id ig
 		#end
 	}
 	
 	public static function loadReplay(name:String){
+		FreeplayState.isRandomNotes = false;
 		#if sys
 		var replayFile:ReplayFile = cast Json.parse(File.getContent(Sys.getCwd() + "replays/" + name));
 		var poop:String = Highscore.formatSong(replayFile.songName, Std.parseInt(replayFile.difficulty));
 
 		PlayState.SONG = Song.loadFromJson(poop, replayFile.songName);
+		PlayState.isMultiplayer = false;
 		PlayState.isStoryMode = false;
 		PlayState.storyDifficulty = Std.parseInt(replayFile.difficulty);
 
 		PlayState.storyWeek = FreeplayState.songs[FreeplayState.curSelected].week;
 		LoadingState.loadAndSwitchState(new PlayState());
 
-		Replay.isReplay = true;
 		PlayState.replayFromFile = replayFile.replayData;
 		PlayState.downscroll = replayFile.downscroll;
 		PlayState.ghostTaps = replayFile.ghosttaps;

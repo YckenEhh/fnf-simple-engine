@@ -1,13 +1,14 @@
 package;
 
+import flixel.tweens.FlxTween;
 import flixel.FlxG;
 import flixel.FlxGame;
 import flixel.FlxState;
-import openfl.Assets;
 import openfl.Lib;
-import openfl.display.FPS;
 import openfl.display.Sprite;
 import openfl.events.Event;
+import ui.FPSDisplay as FPS;
+import ui.Volume;
 #if windows
 #if !neko
 import Discord.DiscordClient;
@@ -21,8 +22,6 @@ import sys.io.Process;
 import lime.app.Application;
 #end
 
-import GameJolt;
-
 using StringTools;
 
 class Main extends Sprite
@@ -34,8 +33,7 @@ class Main extends Sprite
 	var framerate:Int = 60; // How many frames per second the game should run at.
 	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
-	public static var gjToastManager:GJToastManager;
-	var fpsCounter:FPSDisplay;
+	var fpsCounter:FPS;
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
 
@@ -93,43 +91,60 @@ class Main extends Sprite
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 		#end
 
-		gjToastManager = new GJToastManager();
-		addChild(gjToastManager);
-
-		fpsCounter = new FPSDisplay();
+		fpsCounter = new FPS();
         addChild(fpsCounter);
+
+		var volume:Volume = new Volume();
+		addChild(volume);
+
+		Application.current.window.onFocusOut.add(onWindowFocusOut);
+		Application.current.window.onFocusIn.add(onWindowFocusIn);
+	}
+
+	function onWindowFocusOut()
+	{
+		FlxTween.tween(FlxG.sound, {volume: FlxG.save.data.volume / 50}, 0.65);
+	}
+
+	function onWindowFocusIn()
+	{
+		FlxTween.tween(FlxG.sound, {volume: FlxG.save.data.volume}, 0.65);
 	}
 
 	#if windows
 	function onCrash(e:UncaughtErrorEvent):Void
 	{
+		DiscordClient.shutdown();
+
 		var errMsg:String = "";
 		var callStack:Array<StackItem> = CallStack.exceptionStack(true);
 
-		errMsg += 'Simple Engine crashed!\n\n';
+		errMsg += 'Simple Engine crashed!%%';
 
 		for (stackItem in callStack)
 		{
 			switch (stackItem)
 			{
 				case FilePos(s, file, line, column):
-					errMsg += "   > " + file + " (line " + line + ")\n";
+					errMsg += file + " (line " + line + ")%";
 				default:
 					Sys.println(stackItem);
 			}
 		}
 
-		errMsg += "\nUncaught Error: " + e.error + "\n";
-		errMsg += "\nEngine version: " + FNFData.version;
-		errMsg += "\nFPS limit: " + FlxG.save.data.fpslimit;
+		errMsg += "%Uncaught Error: " + e.error + "%";
+		errMsg += "%Engine version: " + FNFData.version;
 
-		errMsg += '\n\nReport this bug here --> OldFlag#4650';
+		errMsg += '%%Report this to my discord: ycken';
 
-		Sys.println(errMsg);
-
-		Application.current.window.alert(errMsg, "Error!");
-		DiscordClient.shutdown();
-		Sys.exit(1);
+		if (sys.FileSystem.exists(Sys.getCwd() + "\\CrashHandler.exe")){
+			var dir:String = Sys.getCwd();
+			Sys.command(dir + 'CrashHandler.exe', [errMsg]);
+		}
+		if (!sys.FileSystem.exists(Sys.getCwd() + "\\CrashHandler.exe"))
+		{
+			Sys.exit(1);
+		}
 	}
 	#end
 }

@@ -98,6 +98,7 @@ class ReplayMenuSubState extends MusicBeatSubstate
 
 		if (FlxG.keys.justPressed.ENTER){
 			Replay.loadReplay(replaysForCurrentSong[curSelected]);
+			Replay.isReplay = true;
 		}
 	}
 

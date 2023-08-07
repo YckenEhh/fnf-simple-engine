@@ -49,10 +49,11 @@ class TitleState extends MusicBeatState
 	{
 		FlxG.drawFramerate = FlxG.save.data.fpslimit;
 		FlxG.updateFramerate = FlxG.save.data.fpslimit;
+		FlxG.autoPause = false;
 
-		#if polymod
-		polymod.Polymod.init({modRoot: "mods", dirs: ['introMod']});
-		#end
+		FlxG.sound.muteKeys = null;
+		FlxG.sound.volumeDownKeys = null;
+		FlxG.sound.volumeUpKeys = null;
 
 		#if sys
 		if (!sys.FileSystem.exists(Sys.getCwd() + "\\replays"))

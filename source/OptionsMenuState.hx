@@ -1,8 +1,5 @@
 package;
 
-import GameJolt.GameJoltLogin;
-import openfl.Lib;
-
 import flash.text.TextField;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -33,7 +30,6 @@ class OptionsMenuState extends MusicBeatState
 		]),
 		new OptionCatagory("Controls", []),
 		new OptionCatagory("Other", [new FpsCapOption('lazy')]),
-		new OptionCatagory("GameJolt", [])
 	];
 
 	private var currentDescription:String = "";
@@ -70,6 +66,10 @@ class OptionsMenuState extends MusicBeatState
 		}
 
 		super.create();
+
+		// fixing lags 
+		FlxG.drawFramerate = FlxG.save.data.fpslimit;
+		FlxG.updateFramerate = FlxG.save.data.fpslimit;
 	}
 
 	override function update(elapsed:Float)
@@ -110,10 +110,6 @@ class OptionsMenuState extends MusicBeatState
 					FlxTransitionableState.skipNextTransIn = true;
 					FlxTransitionableState.skipNextTransOut = true;
 					FlxG.switchState(new ControlsState());
-				}
-				else if (options[curSelected].getName() == "GameJolt")
-				{
-					FlxG.switchState(new GameJoltLogin());
 				}
 			}
 		}

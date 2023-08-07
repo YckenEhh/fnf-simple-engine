@@ -32,7 +32,7 @@ class OutdatedSubState extends MusicBeatSubstate
 
 		var downText:FlxText = new FlxText(0, 0, upperText.width * 1.75, '', 32);
 		downText.font = 'VCR OSD Mono';
-		downText.text = 'Please, press enter to install lasted version of engine, if you want to skip this notification press ESCAPE. Your version of game ${FNFData.version}, newest version is ${needVer}';
+		downText.text = 'Please, install new versin from github, if you want to skip this notification press ESCAPE. Your version of game ${FNFData.version}, newest version is ${needVer}';
 		downText.borderQuality = 2;
 		downText.borderSize = 2;
 		downText.alignment = CENTER;

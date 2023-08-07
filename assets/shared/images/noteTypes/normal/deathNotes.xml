@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="deathNotes.png">
+	<!-- Created with Adobe Animate version 22.0.8.217 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="black0000" x="257" y="0" width="157" height="154"/>
+	<SubTexture name="blue0000" x="100" y="0" width="157" height="154"/>
+	<SubTexture name="dark0000" x="154" y="154" width="154" height="157"/>
+	<SubTexture name="green0000" x="257" y="0" width="157" height="154"/>
+	<SubTexture name="hold0000" x="50" y="0" width="50" height="44"/>
+	<SubTexture name="holdend0000" x="0" y="0" width="50" height="64"/>
+	<SubTexture name="purple0000" x="0" y="154" width="154" height="157"/>
+	<SubTexture name="red0000" x="154" y="154" width="154" height="157"/>
+	<SubTexture name="violet0000" x="100" y="0" width="157" height="154"/>
+	<SubTexture name="white0000" x="308" y="154" width="169" height="169"/>
+	<SubTexture name="yellow0000" x="0" y="154" width="154" height="157"/>
+</TextureAtlas>

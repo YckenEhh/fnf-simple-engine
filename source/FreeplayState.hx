@@ -14,8 +14,21 @@ import flixel.util.FlxColor;
 import lime.utils.Assets;
 import Song.SwagSong;
 import Section.SwagSection;
+import flash.media.Sound;
+#if sys
+import sys.io.File;
+import sys.FileSystem;
+#end
 
 using StringTools;
+
+typedef JsonFreeplay = 
+{
+	songs:Array<String>,
+	icons:Array<String>,
+	weekNum:Int,
+	bgColor:Array<Int>
+}
 
 class FreeplayState extends MusicBeatState
 {
@@ -23,6 +36,8 @@ class FreeplayState extends MusicBeatState
 
 	var selector:FlxText;
 	public static var curSelected:Int = 0;
+	public static var isRandomNotes:Bool = false;
+	public static var mania:Int = 4;
 	var curDifficulty:Int = 1;
 
 	var scoreText:FlxText;
@@ -30,26 +45,71 @@ class FreeplayState extends MusicBeatState
 	var totalNotesText:FlxText;
 	var maxScoreText:FlxText;
 	var keycountText:FlxText;
+	var noteRandomText:FlxText;
 	var lerpScore:Int = 0;
 	var intendedScore:Int = 0;
-
-	var mania:Int = 4;
 
 	private var grpSongs:FlxTypedGroup<Alphabet>;
 	private var curPlaying:Bool = false;
 
 	private var iconArray:Array<HealthIcon> = [];
+	var scoreBG:FlxSprite;
+	var bg:FlxSprite;
+
+	var coolColors:Array<Int> = [
+		0xff9271fd,
+		0xff9271fd,
+		0xff223344,
+		0xFF941653,
+		0xFFfc96d7,
+		0xFFa0d1ff,
+		0xffff78bf,
+		0xfff6b604
+	];
+
+	var songsJS:Array<String>;
+	var iconsJS:Array<String>;
+	var weekNumJS:Int;
+	var bgColorJS:Array<Int>;
 
 	override function create()
 	{
-		var initSonglist = CoolUtil.coolTextFile(Paths.txt('freeplaySonglist'));
-
 		songs = [];
+
+		var initSonglist = CoolUtil.coolTextFile(Paths.txt('freeplaySonglist'));
 
 		for (i in 0...initSonglist.length)
 		{
-			songs.push(new SongMetadata(initSonglist[i], 1, 'gf'));
+			var data:Array<String> = initSonglist[i].split(':');
+			songs.push(new SongMetadata(data[0], Std.parseInt(data[2]), data[1]));
 		}
+
+		#if sys
+		var songsAmmo:Array<String> = [];
+
+		for (songs in FileSystem.readDirectory(FileSystem.absolutePath("mods/freeplay/")))
+			{
+				if (songs.endsWith('.json'))
+				{
+					songsAmmo.push(songs);
+				}
+			}
+
+		for (i in 0...songsAmmo.length)
+		{
+			var toParse:String = File.getContent('mods/freeplay/' + songsAmmo[i]);
+        	var _json:JsonFreeplay = cast haxe.Json.parse(toParse);
+
+			songsJS = _json.songs;
+			iconsJS = _json.icons;
+			weekNumJS = _json.weekNum;
+			bgColorJS = _json.bgColor;
+
+			coolColors.push(CoolUtil.rgbToHex(bgColorJS[0], bgColorJS[1], bgColorJS[2]));
+
+			addWeek(songsJS, weekNumJS, iconsJS);
+		}
+		#end
 
 		/* 
 			if (FlxG.sound.music != null)
@@ -70,29 +130,7 @@ class FreeplayState extends MusicBeatState
 		isDebug = true;
 		#end
 
-		if (StoryMenuState.weekUnlocked[2] || isDebug)
-			addWeek(['Bopeebo', 'Fresh', 'Dadbattle'], 1, ['dad']);
-
-		if (StoryMenuState.weekUnlocked[2] || isDebug)
-			addWeek(['Spookeez', 'South', 'Monster'], 2, ['spooky', 'spooky', 'monster-christmas']);
-
-		if (StoryMenuState.weekUnlocked[3] || isDebug)
-			addWeek(['Pico', 'Philly', 'Blammed'], 3, ['pico']);
-
-		if (StoryMenuState.weekUnlocked[4] || isDebug)
-			addWeek(['Satin-Panties', 'High', 'Milf'], 4, ['mom']);
-
-		if (StoryMenuState.weekUnlocked[5] || isDebug)
-			addWeek(['Cocoa', 'Eggnog', 'Winter-Horrorland'], 5, ['parents-christmas', 'parents-christmas', 'monster-christmas']);
-
-		if (StoryMenuState.weekUnlocked[6] || isDebug)
-			addWeek(['Senpai', 'Roses', 'Thorns'], 6, ['senpai', 'senpai', 'spirit']);
-
-		// LOAD MUSIC
-
-		// LOAD CHARACTERS
-
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuBGBlue'));
+		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		add(bg);
 
 		grpSongs = new FlxTypedGroup<Alphabet>();
@@ -114,7 +152,7 @@ class FreeplayState extends MusicBeatState
 		scoreText = new FlxText(FlxG.width * 0.62, 5, 0, "", 32);
 		scoreText.setFormat("assets/fonts/vcr.ttf", 32, FlxColor.WHITE, RIGHT);
 
-		var scoreBG:FlxSprite = new FlxSprite(scoreText.x - 6, 0).makeGraphic(Std.int(FlxG.width * 0.4), 164, 0xFF000000);
+		scoreBG = new FlxSprite(scoreText.x - 6, 0).makeGraphic(Std.int(FlxG.width * 0.4), 196, 0xFF000000);
 		scoreBG.alpha = 0.6;
 		add(scoreBG);
 
@@ -130,7 +168,11 @@ class FreeplayState extends MusicBeatState
 		keycountText.font = scoreText.font;
 		add(keycountText);
 
-		diffText = new FlxText(scoreText.x, scoreText.y + 132, 0, "", 24);
+		noteRandomText = new FlxText(scoreText.x, scoreText.y + 132, 0, "", 24);
+		noteRandomText.font = scoreText.font;
+		add(noteRandomText);
+
+		diffText = new FlxText(scoreText.x, scoreText.y + 164, 0, "", 24);
 		diffText.font = scoreText.font;
 		add(diffText);
 
@@ -184,6 +226,8 @@ class FreeplayState extends MusicBeatState
 		var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
 		curSong = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
 
+		var shitTime:Array<Float> = [];
+
 		var noteData:Array<SwagSection>;
 		noteData = curSong.notes;
 
@@ -191,12 +235,15 @@ class FreeplayState extends MusicBeatState
 		{
 			if (section.mustHitSection){
 				notesInChart += section.sectionNotes.length;
+				shitTime.push(section.sectionNotes[0]);
 			}
 		}
 
-		mania = curSong.mania;
-		if (mania < 1)
-			mania = 4;
+		if (!isRandomNotes){
+			mania = curSong.mania;
+			if (mania < 1)
+				mania = 4;
+		}
 
 		return notesInChart;
 	}
@@ -206,6 +253,16 @@ class FreeplayState extends MusicBeatState
 		totalNotesText.text = 'Total notes: ${getNotesCount()}';
 		maxScoreText.text = 'Max score: ${getNotesCount() * 320}';
 		keycountText.text = 'Key count: ${mania}';
+		if (isRandomNotes)
+			keycountText.text += ' (CTRL + A/D)'; 
+		noteRandomText.text = 'Randomizer: ' + getStateByBool(isRandomNotes) + '(E to switch)';
+	}
+
+	function getStateByBool(a:Bool){
+		var str:String = 'Disabled';
+		if (a)
+			str = 'Enabled';
+		return(str);
 	}
 
 	override function update(elapsed:Float)
@@ -222,6 +279,7 @@ class FreeplayState extends MusicBeatState
 		}
 
 		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, 0.4));
+		bg.color = FlxColor.interpolate(bg.color, coolColors[songs[curSelected].week], CoolUtil.camLerp(0.045));
 
 		if (Math.abs(lerpScore - intendedScore) <= 10)
 			lerpScore = intendedScore;
@@ -241,10 +299,30 @@ class FreeplayState extends MusicBeatState
 			changeSelection(1);
 		}
 
-		if (FlxG.keys.justPressed.A || FlxG.keys.justPressed.LEFT)
-			changeDiff(-1);
-		if (FlxG.keys.justPressed.D || FlxG.keys.justPressed.RIGHT)
-			changeDiff(1);
+		if (FlxG.keys.justPressed.E){
+			isRandomNotes = !isRandomNotes;
+			getNotesCount();
+			updateInfoTexts();
+		}
+
+		if (FlxG.keys.justPressed.A || FlxG.keys.justPressed.LEFT){
+			if (FlxG.keys.pressed.CONTROL){
+				if (mania > 1)
+					mania -= 1;
+				updateInfoTexts();
+			}
+			else
+				changeDiff(-1);
+		}
+		if (FlxG.keys.justPressed.D || FlxG.keys.justPressed.RIGHT){
+			if (FlxG.keys.pressed.CONTROL){
+				if (mania < 9)
+					mania += 1;
+				updateInfoTexts();
+			}
+			else
+				changeDiff(1);
+		}
 
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
@@ -259,6 +337,7 @@ class FreeplayState extends MusicBeatState
 
 			PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
 			PlayState.isStoryMode = false;
+			PlayState.isMultiplayer = false;
 			PlayState.storyDifficulty = curDifficulty;
 
 			PlayState.storyWeek = songs[curSelected].week;
@@ -326,8 +405,6 @@ class FreeplayState extends MusicBeatState
 		}
 
 		updateInfoTexts();
-
-		FlxG.sound.playMusic(Paths.inst(songs[curSelected].songName), 0);
 	}
 }
 
